@@ -5,6 +5,7 @@ import terser from '@rollup/plugin-terser';
 import resolve from '@rollup/plugin-node-resolve';
 import livereload from 'rollup-plugin-livereload';
 import css from 'rollup-plugin-css-only';
+import json from '@rollup/plugin-json';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -58,6 +59,7 @@ export default {
 			dedupe: ['svelte'],
 			exportConditions: ['svelte']
 		}),
+		json(),
 		commonjs(),
 
 		// In dev mode, call `npm run start` once
