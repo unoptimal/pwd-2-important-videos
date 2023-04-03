@@ -119,7 +119,7 @@
 <style>
 .tooltip {
   position: absolute;
-  top: 133%;
+  top: 120%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
