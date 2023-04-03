@@ -6,7 +6,7 @@
   export let data;
   let filteredData = [];
   let minValue = 0;
-  let maxValue = 200000000;
+  let maxValue = 2000000000;
   let tooltipData = null;
 
   const margin = { top: 20, right: 20, bottom: 40, left: 140 };
@@ -51,6 +51,7 @@
   });
   
   const handleFilterChange = () => {
+
     updateFilteredData();
     xScale.domain([0, filteredData.length + 1]);
     yScale.domain([0, d3.max(filteredData, d => +d.view_count)]);
@@ -69,14 +70,17 @@
 </script>
 
 
+<p>And here's an interactive, if not very messy, broken, and suboptimal scatterplot of the videos in the playlist. You can hover over the points for more information.</p>
+
+
 <div class='controls'>
   <label for="minValue">Min Value:</label>
-  <input type="number" id="minValue" bind:value={minValue} on:input={handleFilterChange}>
+  <input type="number" id="minValue" bind:value={minValue} on:input={handleFilterChange} style="margin-right: 10px;">
   <label for="maxValue">Max Value:</label>
   <input type="number" id="maxValue" bind:value={maxValue} on:input={handleFilterChange}>
 </div>
 
-<p>Hover over the dots for more information!</p>
+<p>Showing {filteredData.length} out of {Object.values(data).length} results</p>
 
 {#if tooltipData}
   <div class="tooltip">
@@ -85,12 +89,17 @@
   </div>
 {/if}
 
-<svg {width} {height} bind:this={svgEl}>
+<svg {width} {height} bind:this={svgEl} style="marginTop: {margin.top}px">
   <g transform={`translate(${margin.left},${margin.top})`}>
+
     <Axis {innerHeight} {margin} scale={xScale} position="bottom" />
+    <text transform={`translate(${innerWidth/2},${innerHeight + 20} )`}>Playlist Position</text>
+
     <Axis {innerHeight} {margin} scale={yScale} position="left" />
-    <text transform={`translate(${-70},${innerHeight / 2}) rotate(-90)`}>View Count (millions)</text>
+    <text transform={`translate(${-80},${innerHeight / 2}) rotate(-90)`}>View Count (millions)</text>
+
       {#each filteredData as data, i}
+      <a href={`https://www.youtube.com/watch?v=${data.video_id}&list=PLFsQleAWXsj_4yDeebiIADdH5FMayBiJo`} target="_blank">
         <circle
           cx={(i + 0.5) * (innerWidth / filteredData.length)}
           cy={yScale(data.view_count) - margin.top}
@@ -99,7 +108,9 @@
           on:mouseover={(event) => handleCircleMouseover(event, data)}
           on:mouseout={(event) => handleCircleMouseout(event, data)}
         />
+      </a>
       {/each}
+
   </g>
 </svg>
 
@@ -108,7 +119,7 @@
 <style>
 .tooltip {
   position: absolute;
-  top: 75%;
+  top: 133%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
